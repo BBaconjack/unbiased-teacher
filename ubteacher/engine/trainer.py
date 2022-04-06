@@ -747,6 +747,11 @@ class UBCTeacherTrainer(DefaultTrainer):
                 model, device_ids=[comm.get_local_rank()], broadcast_buffers=False
             )
 
+            model_teacher = DistributedDataParallel(
+                model_teacher, device_ids=[comm.get_local_rank()], broadcast_buffers=False
+            )
+
+
         TrainerBase.__init__(self)
         self._trainer = (AMPTrainer if cfg.SOLVER.AMP.ENABLED else SimpleTrainer)(
             model, data_loader, optimizer
@@ -960,12 +965,6 @@ class UBCTeacherTrainer(DefaultTrainer):
             if self.iter == self.cfg.SEMISUPNET.BURN_UP_STEP:
                 # update copy the the whole model
                 self._update_teacher_model(keep_rate=0.00)
-
-            elif (
-                self.iter - self.cfg.SEMISUPNET.BURN_UP_STEP
-            ) % self.cfg.SEMISUPNET.TEACHER_UPDATE_ITER == 0:
-                self._update_teacher_model(
-                    keep_rate=self.cfg.SEMISUPNET.EMA_KEEP_RATE)
 
             record_dict = {}
             #  generate the pseudo-label using teacher model
