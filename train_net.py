@@ -36,7 +36,7 @@ def main(args):
     if cfg.SEMISUPNET.Trainer == "ubteacher":
         Trainer = UBTeacherTrainer
     elif cfg.SEMISUPNET.Trainer == "ubcteacher":
-        Traniner = UBCTeacherTrainer
+        Trainer = UBCTeacherTrainer
     elif cfg.SEMISUPNET.Trainer == "baseline":
         Trainer = BaselineTrainer
     else:
